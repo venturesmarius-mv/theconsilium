@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONSILIUM Demo</title>
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0A0A0A;
+            --card-bg: #111111;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --gold: #C9A96E;
+            --gold-dim: rgba(201, 169, 110, 0.15);
+            --green: #4ADE80;
+            --green-dim: rgba(74, 222, 128, 0.12);
+            --red: #F87171;
+            --red-dim: rgba(248, 113, 113, 0.12);
+            --blue: #60A5FA;
+            --blue-dim: rgba(96, 165, 250, 0.12);
+            --text: #FFFFFF;
+            --text-secondary: #9A9A9A;
+            --text-muted: #555555;
+            --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            --sans: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--sans);
+            font-size: 200%;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .demo-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+        }
+
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .screen.active {
+            opacity: 1;
+        }
+
+        .screen-label {
+            font-size: 2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        /* ─── Card base ─── */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 80vw;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .card-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .card-dot.red { background: #FF5F57; }
+        .card-dot.yellow { background: #FEBC2E; }
+        .card-dot.green { background: #28C840; }
+
+        .card-title {
+            margin-left: 8px;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-family: var(--mono);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* ─── Email styles (Screen 1) ─── */
+        .email-list {
+            list-style: none;
+        }
+
+        .email-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .email-item:last-child { border-bottom: none; }
+
+        .email-unread-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            margin-top: 7px;
+            flex-shrink: 0;
+        }
+
+        .email-unread-dot.read {
+            background: transparent;
+        }
+
+        .email-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .email-from {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .email-subject {
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            margin-bottom: 3px;
+        }
+
+        .email-preview {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-time {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .email-item.highlight {
+            background: var(--gold-dim);
+            margin: 0 -24px;
+            padding: 14px 24px;
+            border-radius: 6px;
+        }
+
+        .email-item.highlight .email-from {
+            color: var(--gold);
+        }
+
+        /* ─── Priority styles (Screen 2) ─── */
+        .today-header {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .today-date {
+            color: var(--text-secondary);
+        }
+
+        .lever-banner {
+            background: var(--gold-dim);
+            border: 1px solid rgba(201, 169, 110, 0.25);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+
+        .lever-label {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .lever-text {
+            font-size: 1.6rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .priority-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .priority-item:last-child { border-bottom: none; }
+
+        .priority-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .priority-number.p1 { background: var(--gold-dim); color: var(--gold); }
+        .priority-number.p2 { background: var(--blue-dim); color: var(--blue); }
+
+        .priority-name {
+            font-size: 1.6rem;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .priority-meta {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+        }
+
+        .priority-tag {
+            font-size: 1.15rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-left: 4px;
+        }
+
+        .tag-today { background: var(--red-dim); color: var(--red); }
+        .tag-friday { background: var(--blue-dim); color: var(--blue); }
+
+        .sidebar-cal {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .sidebar-cal-title {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .cal-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 1.5rem;
+        }
+
+        .cal-time {
+            color: var(--text-muted);
+            font-family: var(--mono);
+            font-size: 1.4rem;
+            width: 52px;
+            flex-shrink: 0;
+        }
+
+        .cal-name { color: var(--text-secondary); }
+
+        .cal-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+        }
+
+        /* ─── Meeting prep (Screen 3) ─── */
+        .meeting-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .meeting-time {
+            font-size: 1.5rem;
+            font-family: var(--mono);
+            color: var(--gold);
+            background: var(--gold-dim);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        .meeting-name {
+            font-size: 1.85rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .prep-label {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .prep-label .auto-badge {
+            background: var(--green-dim);
+            color: var(--green);
+            font-size: 1.15rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        .prep-bullet {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 1.55rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+        }
+
+        .prep-bullet:last-child { border-bottom: none; }
+
+        .prep-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+            font-size: 1.4rem;
+        }
+
+        .prep-bullet .highlight-num {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .prep-bullet .highlight-green {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .prep-bullet .highlight-red {
+            color: var(--red);
+            font-weight: 600;
+        }
+
+        /* ─── Decision card (Screen 4) ─── */
+        .decision-badge {
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .decision-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .decision-text {
+            font-size: 1.6rem;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .decision-text .highlight-num {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .decision-text .highlight-green {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .decision-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: none;
+            cursor: default;
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: #0A0A0A;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        .strategic-q {
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .strategic-q-label {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .strategic-q-text {
+            font-size: 1.55rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* ─── Competitive intel (Screen 5) ─── */
+        .intel-header {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .intel-header .scout-badge {
+            background: var(--gold-dim);
+            color: var(--gold);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        .intel-item {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .intel-item:last-child { border-bottom: none; }
+
+        .intel-severity {
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .severity-high { background: var(--red-dim); color: var(--red); }
+        .severity-medium { background: var(--gold-dim); color: var(--gold); }
+
+        .intel-title {
+            font-size: 1.6rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .intel-so-what {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            padding-left: 12px;
+            border-left: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .intel-so-what strong {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ─── Weekly report (Screen 6) ─── */
+        .report-header {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .report-section {
+            margin-bottom: 18px;
+        }
+
+        .report-section-title {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .report-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 5px 0;
+            font-size: 1.55rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .report-item .bullet {
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .report-impact {
+            background: var(--green-dim);
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 1.5rem;
+            color: var(--green);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .report-next {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ─── Closing screen (Screen 7) ─── */
+        .closing {
+            text-align: center;
+        }
+
+        .closing-wordmark {
+            font-size: 3.5rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 300;
+            margin-bottom: 12px;
+        }
+
+        .closing-subtitle {
+            font-size: 1.75rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+
+        .closing-line {
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+            margin: 24px auto;
+            opacity: 0.4;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 700px) {
+            .screen { padding: 20px; }
+            .card { max-width: 100%; }
+            .card-body { padding: 16px; }
+            .closing-wordmark { font-size: 2.75rem; letter-spacing: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+
+        <!-- Screen 1: Morning Briefing Email -->
+        <div class="screen active" id="screen-1">
+            <div class="screen-label">5:30 AM — Your briefing arrives</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-dot red"></div>
+                    <div class="card-dot yellow"></div>
+                    <div class="card-dot green"></div>
+                    <div class="card-title">Inbox — 3 unread</div>
+                </div>
+                <div class="card-body">
+                    <ul class="email-list">
+                        <li class="email-item highlight">
+                            <div class="email-unread-dot"></div>
+                            <div class="email-content">
+                                <div class="email-from">CONSILIUM</div>
+                                <div class="email-subject">Morning Briefing — Thursday, March 20, 2026</div>
+                                <div class="email-preview">Your top 3 priorities ranked. Competitor alert: pricing change detected. Calendar: 3 meetings today, first at 10:00 AM.</div>
+                            </div>
+                            <div class="email-time">5:30 AM</div>
+                        </li>
+                        <li class="email-item">
+                            <div class="email-unread-dot"></div>
+                            <div class="email-content">
+                                <div class="email-from">David Chen</div>
+                                <div class="email-subject">Re: Anderson Partnership — Contract Review</div>
+                                <div class="email-preview">Looks good on our end. Legal has two minor redlines on the indemnity clause, otherwise ready to sign.</div>
+                            </div>
+                            <div class="email-time">11:42 PM</div>
+                        </li>
+                        <li class="email-item">
+                            <div class="email-unread-dot read"></div>
+                            <div class="email-content">
+                                <div class="email-from">Sarah Mitchell — Marketing</div>
+                                <div class="email-subject">Q2 Budget Proposal — Final Version</div>
+                                <div class="email-preview">Attached the revised budget with the paid acquisition numbers we discussed. Total ask is $45K, ROI projections on slide 4.</div>
+                            </div>
+                            <div class="email-time">Yesterday</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Priorities -->
+        <div class="screen" id="screen-2">
+            <div class="screen-label">Your priorities, ranked by impact</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-dot red"></div>
+                    <div class="card-dot yellow"></div>
+                    <div class="card-dot green"></div>
+                    <div class="card-title">consilium — today</div>
+                </div>
+                <div class="card-body">
+                    <div class="today-header">Today — <span class="today-date">Thursday, March 20</span></div>
+
+                    <div class="lever-banner">
+                        <div class="lever-label">Your biggest lever today</div>
+                        <div class="lever-text">Close the Anderson partnership — it unblocks $340K in Q2 pipeline and de-risks the board conversation on Tuesday.</div>
+                    </div>
+
+                    <div class="priority-item">
+                        <div class="priority-number p1">1</div>
+                        <div>
+                            <div class="priority-name">Anderson partnership follow-up</div>
+                            <div class="priority-meta">Due today <span class="priority-tag tag-today">P1</span></div>
+                        </div>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-number p2">2</div>
+                        <div>
+                            <div class="priority-name">Review Q1 board deck</div>
+                            <div class="priority-meta">Due Friday <span class="priority-tag tag-friday">P2</span></div>
+                        </div>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-number p2">3</div>
+                        <div>
+                            <div class="priority-name">Approve marketing budget reallocation</div>
+                            <div class="priority-meta">Due today <span class="priority-tag tag-today">P2</span></div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-cal">
+                        <div class="sidebar-cal-title">Calendar</div>
+                        <div class="cal-item"><span class="cal-time">10:00a</span><span class="cal-dot"></span><span class="cal-name">Board Strategy Review</span></div>
+                        <div class="cal-item"><span class="cal-time">1:30p</span><span class="cal-dot"></span><span class="cal-name">Anderson — Contract Call</span></div>
+                        <div class="cal-item"><span class="cal-time">3:00p</span><span class="cal-dot"></span><span class="cal-name">Marketing Sync</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Meeting Prep -->
+        <div class="screen" id="screen-3">
+            <div class="screen-label">Meeting prep — done before you arrive</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-dot red"></div>
+                    <div class="card-dot yellow"></div>
+                    <div class="card-dot green"></div>
+                    <div class="card-title">consilium — meeting prep</div>
+                </div>
+                <div class="card-body">
+                    <div class="meeting-header">
+                        <span class="meeting-time">10:00 AM</span>
+                        <span class="meeting-name">Board Strategy Review</span>
+                    </div>
+
+                    <div class="prep-label">Prep Notes <span class="auto-badge">Auto-generated</span></div>
+
+                    <div class="prep-bullet">
+                        <span class="prep-icon">&#9670;</span>
+                        <span>Q1 revenue: <span class="highlight-num">$2.4M</span> (<span class="highlight-green">+12% vs target</span>). Anderson deal is <span class="highlight-num">$340K</span> if closed this quarter.</span>
+                    </div>
+                    <div class="prep-bullet">
+                        <span class="prep-icon">&#9670;</span>
+                        <span>Churn decreased from <span class="highlight-red">3.1%</span> to <span class="highlight-green">2.4%</span> after the onboarding changes in February.</span>
+                    </div>
+                    <div class="prep-bullet">
+                        <span class="prep-icon">&#9670;</span>
+                        <span>Competitor X raised enterprise pricing <span class="highlight-num">15%</span> — opportunity to capture displaced mid-market customers.</span>
+                    </div>
+                    <div class="prep-bullet">
+                        <span class="prep-icon">&#9670;</span>
+                        <span>Key question for the board: Should we invest in mobile app before Q3, or double down on enterprise features?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Decision Card -->
+        <div class="screen" id="screen-4">
+            <div class="screen-label">Decisions surfaced, not buried</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-dot red"></div>
+                    <div class="card-dot yellow"></div>
+                    <div class="card-dot green"></div>
+                    <div class="card-title">consilium — decisions</div>
+                </div>
+                <div class="card-body">
+                    <div class="decision-badge">Decision Needed</div>
+
+                    <div class="decision-text">
+                        Marketing is requesting <span class="highlight-num">$45K</span> for Q2 paid acquisition. Based on Q1 data, CAC is <span class="highlight-num">$127</span> and LTV is <span class="highlight-num">$2,400</span> (<span class="highlight-green">19:1 ratio</span>). BEACON analysis suggests this is a high-ROI investment with an expected payback period of 47 days.
+                    </div>
+
+                    <div class="decision-buttons">
+                        <div class="btn btn-gold">Approve</div>
+                        <div class="btn btn-outline">Need More Info</div>
+                    </div>
+
+                    <div class="strategic-q">
+                        <div class="strategic-q-label">Strategic Question</div>
+                        <div class="strategic-q-text">Are we optimizing for growth or profitability this quarter? The board expects an answer on Tuesday.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Competitive Intel -->
+        <div class="screen" id="screen-5">
+            <div class="screen-label">Your competitors, monitored weekly</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-dot red"></div>
+                    <div class="card-dot yellow"></div>
+                    <div class="card-dot green"></div>
+                    <div class="card-title">consilium — competitive intel</div>
+                </div>
+                <div class="card-body">
+                    <div class="intel-header"><span class="scout-badge">SCOUT</span> Weekly Competitive Briefing</div>
+
+                    <div class="intel-item">
+                        <div class="intel-severity severity-high">High</div>
+                        <div class="intel-title">Competitor X raised enterprise pricing 15%</div>
+                        <div class="intel-so-what"><strong>So what:</strong> Their mid-market customers may be exploring alternatives. Your Pro tier is now 40% cheaper than their equivalent. Sales team notified.</div>
+                    </div>
+
+                    <div class="intel-item">
+                        <div class="intel-severity severity-medium">Medium</div>
+                        <div class="intel-title">Competitor Y launched an AI assistant feature</div>
+                        <div class="intel-so-what"><strong>So what:</strong> Feature parity pressure in 6-9 months. Your AI roadmap is already ahead — consider accelerating the public launch to capture the narrative.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 6: Weekly Report -->
+        <div class="screen" id="screen-6">
+            <div class="screen-label">Your week, summarized on Friday</div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-dot red"></div>
+                    <div class="card-dot yellow"></div>
+                    <div class="card-dot green"></div>
+                    <div class="card-title">consilium — weekly report</div>
+                </div>
+                <div class="card-body">
+                    <div class="report-header">Weekly Report — Week of March 16</div>
+
+                    <div class="report-section">
+                        <div class="report-section-title">What We Shipped</div>
+                        <div class="report-item"><span class="bullet">&#8226;</span><span>Anderson partnership moved from proposal to contract review</span></div>
+                        <div class="report-item"><span class="bullet">&#8226;</span><span>Onboarding A/B test concluded — Variant B lifted activation 23%</span></div>
+                        <div class="report-item"><span class="bullet">&#8226;</span><span>Q1 board deck completed and distributed to all directors</span></div>
+                    </div>
+
+                    <div class="report-impact">Pipeline grew $340K. Activation rate improved from 34% to 42%. Net revenue retention trending to 108%.</div>
+
+                    <div class="report-section">
+                        <div class="report-section-title">Next Week</div>
+                        <div class="report-next">Board meeting Tuesday. Anderson decision expected Wednesday. Marketing budget approval needed before month-end.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 7 removed — was just a closing card that wasted time -->
+
+    </div>
+
+    <script>
+        (function() {
+            const screens = document.querySelectorAll('.screen');
+            const total = screens.length;
+            let current = 0;
+            const HOLD = 9000;
+            const FADE = 600;
+            const INTERVAL = HOLD + FADE;
+
+            function advance() {
+                screens[current].classList.remove('active');
+                current = (current + 1) % total;
+                screens[current].classList.add('active');
+            }
+
+            setInterval(advance, INTERVAL);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONSILIUM — Your AI Chief of Staff | theconsilium.ai</title>
+    <meta name="description" content="Where leverage meets intelligence. The AI-powered executive operating system for founders who refuse to waste time on work a machine should handle.">
+    <meta property="og:title" content="CONSILIUM — Your AI Chief of Staff">
+    <meta property="og:description" content="Replaces your $36,000/year executive assistant for $499/month. A pre-configured AI system that runs on hardware in your office.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://theconsilium.ai">
+    <link rel="canonical" href="https://theconsilium.ai">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230E1111' width='100' height='100' rx='12'/><text x='50' y='68' font-size='60' font-family='Georgia,serif' font-weight='300' fill='%23C9A96E' text-anchor='middle'>C</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0E1111;
+            --bg-card: #1A1A1A;
+            --bg-light: #F8F9FA;
+            --gold: #D4A853;
+            --gold-hover: #E0B863;
+            --gold-dim: rgba(201, 169, 110, 0.15);
+            --white: #FFFFFF;
+            --muted: #888888;
+            --dim: #555555;
+            --border: rgba(255, 255, 255, 0.08);
+            --radius: 40px;
+            --radius-lg: 60px;
+            --max-width: 1280px;
+            --font-sans: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+            --font-serif: Georgia, 'Times New Roman', serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--white);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ───────────────── BACKGROUND TEXTURES ───────────────── */
+
+        /* Dot grid on main body */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ensure all content sits above the dot grid */
+        nav, section, footer, .demo-frame-wrapper { position: relative; z-index: 1; }
+
+        /* Radial light pools on key sections */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%; left: 50%; transform: translateX(-50%);
+            width: 120%; height: 80%;
+            background: radial-gradient(ellipse at center, rgba(201,169,110,0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero > * { position: relative; z-index: 1; }
+
+        .problem::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(201,169,110,0.10) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .problem { position: relative; }
+        .problem > * { position: relative; z-index: 1; }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(201,169,110,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .final-cta { position: relative; }
+        .final-cta > * { position: relative; z-index: 1; }
+
+        /* Fine horizontal lines on dark card sections */
+        .how-it-works::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 79px,
+                rgba(255,255,255,0.06) 79px,
+                rgba(255,255,255,0.06) 80px
+            );
+            pointer-events: none;
+        }
+        .how-it-works { position: relative; }
+        .how-it-works > * { position: relative; z-index: 1; }
+
+        /* Diagonal lines on the guarantee section */
+        .guarantee::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 39px,
+                rgba(201,169,110,0.08) 39px,
+                rgba(201,169,110,0.08) 40px
+            );
+            pointer-events: none;
+        }
+        .guarantee > * { position: relative; z-index: 1; }
+
+        /* Noise grain on the social proof section */
+        .social-proof::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .social-proof { position: relative; overflow: hidden; }
+        .social-proof > * { position: relative; z-index: 1; }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 48px;
+        }
+
+        section {
+            padding: 140px 0;
+        }
+
+        a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--gold-hover);
+        }
+
+        /* ───────────────── SCROLL REVEAL ───────────────── */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ───────────────── PILL NAV ───────────────── */
+
+        .pill-nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(14, 17, 17, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .pill-nav.scrolled {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .pill-nav-logo {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .pill-nav-logo span {
+            opacity: 0.5;
+            margin: 0 10px;
+            font-weight: 400;
+        }
+
+        .pill-nav-cta {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold) !important;
+            transition: opacity 0.2s;
+        }
+
+        .pill-nav-cta:hover {
+            opacity: 0.8;
+            color: var(--gold) !important;
+        }
+
+        /* ───────────────── HERO ───────────────── */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 160px 48px 100px;
+            position: relative;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-badge {
+            background: var(--gold);
+            color: var(--bg);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 8px 20px;
+            border-radius: 100px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -3px;
+            margin-bottom: 40px;
+            color: var(--white);
+        }
+
+        .hero h1 em {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            color: var(--bg);
+            font-family: var(--font-sans);
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 18px 44px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: -0.02em;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold);
+            color: var(--bg);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201, 169, 110, 0.3);
+        }
+
+        .btn-gold-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gold);
+            color: var(--bg);
+            font-family: var(--font-sans);
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 18px 44px;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: -0.02em;
+        }
+
+        .btn-gold-pill:hover {
+            background: var(--gold-hover);
+            color: var(--bg);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201, 169, 110, 0.3);
+        }
+
+        .hero-founding {
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* ───────────────── DEMO SHOWCASE ───────────────── */
+
+        .demo-showcase {
+            background: var(--bg);
+            padding: 80px 0 0;
+            text-align: center;
+        }
+
+        .demo-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .demo-headline {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        .demo-frame-wrapper {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .demo-frame-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .demo-caption {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 1rem;
+            color: var(--dim);
+            padding-bottom: 60px;
+        }
+
+        /* ───────────────── PROBLEM / GIANT TEXT ───────────────── */
+
+        .problem {
+            background: var(--bg);
+            padding: 160px 0;
+        }
+
+        .problem-headline {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -2px;
+            max-width: 900px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .problem-headline .dim {
+            color: var(--dim);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: clamp(5rem, 10vw, 8rem);
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: -5px;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        /* ───────────────── PERSONA CARDS ───────────────── */
+
+        .personas {
+            background: var(--bg);
+            padding: 140px 0;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-headline {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-headline em {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold);
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .persona-card {
+            border-radius: var(--radius-lg);
+            padding: 56px 48px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .persona-card.dark {
+            background: var(--bg-card);
+            color: var(--white);
+        }
+
+        .persona-card.light {
+            background: var(--bg-card);
+            color: var(--white);
+        }
+
+        .persona-card.gold-accent {
+            background: var(--bg-card);
+            border: 1px solid rgba(201, 169, 110, 0.3);
+        }
+
+        .persona-card.dot-pattern {
+            background: var(--bg-card);
+            color: var(--white);
+        }
+
+        .persona-card.dot-pattern::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background-image: radial-gradient(circle, rgba(201,169,110,0.15) 1px, transparent 1px);
+            background-size: 16px 16px;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .persona-card h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .persona-card .tagline {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .persona-card.light .tagline {
+            color: var(--gold);
+        }
+
+        .persona-card p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            opacity: 0.85;
+        }
+
+        .persona-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .persona-card ul li {
+            font-size: 1.1rem;
+            padding: 6px 0 6px 20px;
+            position: relative;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        .persona-card.dark ul li::before,
+        .persona-card.gold-accent ul li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        .persona-card.light ul li::before,
+        .persona-card.dot-pattern ul li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        /* ───────────────── HOW IT WORKS ───────────────── */
+
+        .how-it-works {
+            background: var(--bg-card);
+            padding: 140px 0;
+            border-radius: 0;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+            margin-top: 80px;
+        }
+
+        .step {
+            position: relative;
+        }
+
+        .step-number {
+            font-size: clamp(4rem, 8vw, 6rem);
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: -3px;
+            line-height: 1;
+            margin-bottom: 24px;
+            opacity: 0.6;
+        }
+
+        .step h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 16px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        .step p {
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* ───────────────── CAPABILITIES ───────────────── */
+
+        .capabilities {
+            background: var(--bg);
+            padding: 140px 0;
+        }
+
+        .cap-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 80px;
+        }
+
+        .cap-card {
+            border-radius: var(--radius);
+            padding: 52px 44px;
+            transition: transform 0.3s ease;
+        }
+
+        .cap-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .cap-card:nth-child(odd) {
+            background: var(--bg-card);
+        }
+
+        .cap-card:nth-child(even) {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .cap-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .cap-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 16px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        .cap-card p {
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* ───────────────── SECURITY ───────────────── */
+
+        .security {
+            background: var(--bg);
+            padding: 140px 0;
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 80px;
+        }
+
+        .security-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 48px 36px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .security-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .security-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            border: 1px solid rgba(201, 169, 110, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .security-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--gold);
+        }
+
+        .security-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            line-height: 1.5;
+        }
+
+        /* ───────────────── GUARANTEE ───────────────── */
+
+        .guarantee {
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.08) 0%, var(--bg) 60%);
+            border-top: 1px solid rgba(201, 169, 110, 0.2);
+            border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .guarantee-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--bg);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 10px 24px;
+            border-radius: 100px;
+            margin-bottom: 40px;
+        }
+
+        .guarantee h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 24px;
+            line-height: 1.3;
+            letter-spacing: -1px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .guarantee .fine {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-top: 20px;
+        }
+
+        /* ───────────────── SOCIAL PROOF ───────────────── */
+
+        .social-proof {
+            background: var(--bg-card);
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .social-proof blockquote {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 400;
+            color: var(--white);
+            line-height: 1.5;
+            max-width: 800px;
+            margin: 40px auto 32px;
+        }
+
+        .social-proof .attribution {
+            font-family: var(--font-sans);
+            font-style: normal;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        .social-proof .attribution-sub {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        /* ───────────────── WHO WE ARE ───────────────── */
+
+        .who-we-are {
+            background: var(--bg);
+            padding: 140px 0;
+        }
+
+        .who-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .who-inner .section-label {
+            text-align: left;
+        }
+
+        .who-inner h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 32px;
+            line-height: 1.1;
+        }
+
+        .who-inner h2 em {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold);
+        }
+
+        .who-inner p {
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .who-inner a.who-link {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* ───────────────── FAQ ───────────────── */
+
+        .faq {
+            background: var(--bg-card);
+            padding: 140px 0;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 60px auto 0;
+        }
+
+        .faq-item {
+            border-radius: 20px;
+            background: var(--bg);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 28px 60px 28px 32px;
+            font-family: var(--font-sans);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+            line-height: 1.4;
+            transition: color 0.2s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--gold);
+        }
+
+        .faq-question::after {
+            content: "+";
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--gold);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.open .faq-question::after {
+            content: "\2212";
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 32px 28px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        /* ───────────────── FINAL CTA ───────────────── */
+
+        .final-cta {
+            background: var(--bg);
+            padding: 160px 0;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -3px;
+            line-height: 0.95;
+            margin-bottom: 48px;
+        }
+
+        .final-cta h2 em {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: -1px;
+        }
+
+        .final-cta .cta-contact {
+            font-size: 1.15rem;
+            color: var(--muted);
+            margin-top: 40px;
+            line-height: 1.8;
+        }
+
+        .final-cta .cta-trust {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.15rem;
+            color: var(--dim);
+            margin-top: 16px;
+        }
+
+        .final-cta .cta-price {
+            font-size: 0.9rem;
+            color: var(--dim);
+            margin-top: 32px;
+            letter-spacing: 0.05em;
+        }
+
+        /* ───────────────── FOOTER ───────────────── */
+
+        footer {
+            background: var(--bg-card);
+            padding: 80px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-cta h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+
+        .footer-cta h3 em {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold);
+        }
+
+        .footer-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .footer-info-group h4 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .footer-info-group a {
+            display: block;
+            font-size: 1rem;
+            color: var(--white);
+            opacity: 0.7;
+            margin-bottom: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .footer-info-group a:hover {
+            opacity: 1;
+            color: var(--gold);
+        }
+
+        .footer-giant {
+            font-size: 15vw;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            color: var(--white);
+            opacity: 0.03;
+            text-align: center;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 40px;
+            user-select: none;
+        }
+
+        .footer-copy {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--dim);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ───────────────── RESPONSIVE ───────────────── */
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 0 24px;
+            }
+
+            section {
+                padding: 100px 0;
+            }
+
+            .hero {
+                padding: 140px 24px 80px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .persona-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .cap-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .security-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .stat-number {
+                font-size: 5rem !important;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-info {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-giant {
+                font-size: 20vw;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                letter-spacing: -1.5px;
+            }
+
+            .hero-badges {
+                gap: 8px;
+            }
+
+            .hero-badge {
+                font-size: 0.65rem;
+                padding: 6px 14px;
+            }
+
+            .btn-primary,
+            .btn-gold-pill {
+                width: 100%;
+                justify-content: center;
+                font-size: 1rem;
+                padding: 16px 32px;
+            }
+
+            .persona-card {
+                padding: 40px 28px;
+                border-radius: 32px;
+            }
+
+            .cap-card {
+                padding: 40px 28px;
+                border-radius: 28px;
+            }
+
+            .security-card {
+                border-radius: 28px;
+            }
+
+            .faq-item {
+                border-radius: 16px;
+            }
+
+            .pill-nav {
+                padding: 10px 20px;
+                gap: 12px;
+            }
+
+            .pill-nav-logo {
+                font-size: 0.75rem;
+            }
+
+            .footer-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PILL NAV -->
+    <nav class="pill-nav" id="navbar">
+        <span class="pill-nav-logo">&#9683; CONSILIUM</span>
+        <span class="pill-nav-logo"><span>|</span></span>
+        <a href="https://calendly.com/mariusventures/15min" class="pill-nav-cta" target="_blank" rel="noopener">Apply Now</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="top">
+        <div class="hero-badges reveal">
+            <span class="hero-badge">AI-Powered</span>
+            <span class="hero-badge">Self-Improving</span>
+            <span class="hero-badge">Always On</span>
+        </div>
+        <h1 class="reveal reveal-delay-1">Your Leverage.<br><em>Multiplied.</em></h1>
+        <p class="hero-subtitle reveal reveal-delay-2">The executive operating system that works while you sleep.</p>
+        <a href="#demo" class="btn-primary reveal reveal-delay-3">
+            Preview Membership
+        </a>
+        <div class="hero-founding reveal reveal-delay-4">Currently onboarding founding members</div>
+    </section>
+
+    <!-- DEMO SHOWCASE -->
+    <section class="demo-showcase" id="demo">
+        <div class="container">
+            <div class="demo-label reveal">See It In Action</div>
+            <div class="demo-headline reveal">A day in the life of a CONSILIUM member</div>
+        </div>
+        <div class="demo-frame-wrapper">
+            <iframe src="demo-screens.html?v=4" loading="eager" scrolling="no"></iframe>
+        </div>
+        <div class="container">
+            <div class="demo-caption">Live screens from an active system</div>
+        </div>
+    </section>
+
+    <!-- PROBLEM — GIANT TEXT STYLE -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <h2 class="problem-headline reveal">In a world drowning in noise, <span class="dim">we built a system that gives you</span> clarity.</h2>
+            <div class="stats-row">
+                <div class="stat-item reveal reveal-delay-1">
+                    <div class="stat-number">45</div>
+                    <div class="stat-label">minutes saved every morning</div>
+                </div>
+                <div class="stat-item reveal reveal-delay-2">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">hours reclaimed per week</div>
+                </div>
+                <div class="stat-item reveal reveal-delay-3">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">effort while you sleep</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PERSONAS — GOOBLY CARD GRID -->
+    <section class="personas" id="membership">
+        <div class="container">
+            <div class="section-label reveal">Membership</div>
+            <h2 class="section-headline reveal">Built for the ambitious,<br><em>the relentless.</em></h2>
+            <div class="persona-grid">
+                <div class="persona-card light reveal reveal-delay-1">
+                    <h3>CEOs &amp; Founders</h3>
+                    <div class="tagline">"Run your company, not your inbox."</div>
+                    <p>You're making 50+ decisions a day. Your AI Chief of Staff handles the research, monitoring, and preparation so every decision is informed, not reactive.</p>
+                    <ul>
+                        <li>Competitive intelligence delivered weekly</li>
+                        <li>Morning briefing before your first meeting</li>
+                        <li>Content drafted in your voice overnight</li>
+                    </ul>
+                </div>
+                <div class="persona-card gold-accent reveal reveal-delay-2">
+                    <h3>Fractional Executives</h3>
+                    <div class="tagline">"Multiply yourself across every client."</div>
+                    <p>Managing 5-10 clients means 5-10 contexts to hold in your head. Your system holds all of them and works across every one while you sleep.</p>
+                    <ul>
+                        <li>Multi-company context switching handled</li>
+                        <li>Client-specific research and monitoring</li>
+                        <li>Weekly reports auto-assembled from real data</li>
+                    </ul>
+                </div>
+                <div class="persona-card dark reveal reveal-delay-3">
+                    <h3>Solo Operators</h3>
+                    <div class="tagline">"The executive team you can't afford to hire."</div>
+                    <p>You need a Chief of Staff, a research analyst, a content writer, and a competitive intelligence officer. You can afford one subscription.</p>
+                    <ul>
+                        <li>24/7 operations for a one-person company</li>
+                        <li>Blog and social content produced overnight</li>
+                        <li>Website monitoring and SEO tracking</li>
+                    </ul>
+                </div>
+                <div class="persona-card dot-pattern reveal reveal-delay-4">
+                    <h3>Growing Teams</h3>
+                    <div class="tagline">"Shared intelligence across your leadership."</div>
+                    <p>Your leadership team needs the same context you have. CONSILIUM keeps everyone aligned with shared briefings, tracked priorities, and team-wide visibility.</p>
+                    <ul>
+                        <li>Unified dashboard for the entire leadership team</li>
+                        <li>Shared competitive intelligence and market signals</li>
+                        <li>Team task coordination and accountability</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how">
+        <div class="container">
+            <div class="section-label reveal">How It Works</div>
+            <h2 class="section-headline reveal">Effortless from <em>day one.</em></h2>
+            <div class="steps-grid">
+                <div class="step reveal reveal-delay-1">
+                    <div class="step-number">01</div>
+                    <h3>A 45-minute conversation.</h3>
+                    <p>We learn your business, your team, your competitors, your constraints. That's the only setup you'll ever do.</p>
+                </div>
+                <div class="step reveal reveal-delay-2">
+                    <div class="step-number">02</div>
+                    <h3>Hardware arrives at your door.</h3>
+                    <p>A pre-configured Mac Mini, ready to plug in. Your AI Chief of Staff starts running that night.</p>
+                </div>
+                <div class="step reveal reveal-delay-3">
+                    <div class="step-number">03</div>
+                    <h3>Intelligence, delivered.</h3>
+                    <p>Every morning, your briefing arrives. Every night, your system works. Every week, it gets smarter.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE BOX -->
+    <section class="problem" id="the-box">
+        <div class="container">
+            <div class="section-label reveal">The Hardware</div>
+            <h2 class="section-headline reveal">It's a box. <em>Not an app.</em></h2>
+            <div style="max-width: 800px; margin: 0 auto 80px; text-align: center;">
+                <p class="reveal" style="font-size: 1.3rem; color: var(--muted); line-height: 1.8;">A Mac Mini. Smaller than a book. No monitor needed. No keyboard. It sits on a shelf in your office, connects to your WiFi, and runs your entire AI Chief of Staff silently in the background — 24 hours a day, 7 days a week.</p>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item reveal reveal-delay-1">
+                    <div class="stat-number" style="font-size: clamp(3rem, 6vw, 5rem);">No</div>
+                    <div class="stat-label">monitor needed</div>
+                </div>
+                <div class="stat-item reveal reveal-delay-2">
+                    <div class="stat-number" style="font-size: clamp(3rem, 6vw, 5rem);">No</div>
+                    <div class="stat-label">cloud dependency</div>
+                </div>
+                <div class="stat-item reveal reveal-delay-3">
+                    <div class="stat-number" style="font-size: clamp(3rem, 6vw, 5rem);">Your</div>
+                    <div class="stat-label">network. Your data.</div>
+                </div>
+            </div>
+            <div style="max-width: 800px; margin: 60px auto 0; text-align: center;">
+                <p class="reveal" style="font-size: 1.15rem; color: var(--muted); line-height: 1.8;">You access your dashboard from any device on your network — laptop, phone, tablet. We set up secure remote access so you can check in from anywhere. But your data never leaves the box unless you tell it to. No one at Marius Ventures can see your information. It's yours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAPABILITIES -->
+    <section class="capabilities" id="capabilities">
+        <div class="container">
+            <div class="section-label reveal">Capabilities</div>
+            <h2 class="section-headline reveal">A network of intelligence<br><em>working for you.</em></h2>
+            <div class="cap-grid">
+                <div class="cap-card reveal reveal-delay-1">
+                    <div class="cap-label">Morning Intelligence</div>
+                    <h3>Before your first meeting, you'll know what matters.</h3>
+                    <p>90-second briefing. Priorities ranked. Competitors monitored. Calendar optimized. One insight to sharpen your thinking.</p>
+                </div>
+                <div class="cap-card reveal reveal-delay-2">
+                    <div class="cap-label">Overnight Operations</div>
+                    <h3>Your system works a full shift while you sleep.</h3>
+                    <p>Research completed. Content drafted. Emails classified. Links curated. Tasks processed. You wake up to finished work, not a growing to-do list.</p>
+                </div>
+                <div class="cap-card reveal reveal-delay-3">
+                    <div class="cap-label">Competitive Awareness</div>
+                    <h3>Always know what's happening in your market.</h3>
+                    <p>Weekly competitor scans. Pricing changes detected. New features flagged. Industry trends surfaced. You're never caught off guard.</p>
+                </div>
+                <div class="cap-card reveal reveal-delay-4">
+                    <div class="cap-label">Self-Improving System</div>
+                    <h3>Unlike any tool you've used, this one gets better.</h3>
+                    <p>Weekly optimization cycles. Performance scoring. Underperforming capabilities automatically improved. Your system compounds over time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IT GROWS WITH YOU -->
+    <section style="background: var(--bg-card); padding: 160px 0; position: relative; overflow: hidden;">
+        <!-- Subtle diagonal texture -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: repeating-linear-gradient(135deg, transparent, transparent 59px, rgba(201,169,110,0.04) 59px, rgba(201,169,110,0.04) 60px); pointer-events: none;"></div>
+        <div class="container" style="position: relative; z-index: 1;">
+            <div class="section-label reveal">Intelligence That Compounds</div>
+            <h2 class="section-headline reveal">Month 1 is good.<br><em>Month 6 is transformative.</em></h2>
+            <div style="max-width: 800px; margin: 0 auto 80px; text-align: center;">
+                <p class="reveal" style="font-size: 1.25rem; color: var(--muted); line-height: 1.8;">Every tool you've ever subscribed to stays exactly as smart as the day you signed up. CONSILIUM is different. It learns. It adapts. It improves — automatically, every single week.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1100px; margin: 0 auto;">
+                <div class="reveal reveal-delay-1" style="background: var(--bg); border-radius: var(--radius); padding: 48px 36px; text-align: center;">
+                    <div style="font-size: 3.5rem; font-weight: 800; color: var(--gold); letter-spacing: -2px; margin-bottom: 16px; font-family: var(--font-serif);">Week 1</div>
+                    <div style="font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 12px;">It learns your business</div>
+                    <div style="font-size: 1.05rem; color: var(--muted); line-height: 1.7;">Your goals, your competitors, your team, your schedule, your writing voice. The system builds a complete model of how you operate.</div>
+                </div>
+                <div class="reveal reveal-delay-2" style="background: var(--bg); border-radius: var(--radius); padding: 48px 36px; text-align: center;">
+                    <div style="font-size: 3.5rem; font-weight: 800; color: var(--gold); letter-spacing: -2px; margin-bottom: 16px; font-family: var(--font-serif);">Month 1</div>
+                    <div style="font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 12px;">It starts improving itself</div>
+                    <div style="font-size: 1.05rem; color: var(--muted); line-height: 1.7;">Every week, the system tests its own performance, scores itself, keeps what works, and discards what doesn't. No human intervention required.</div>
+                </div>
+                <div class="reveal reveal-delay-3" style="background: var(--bg); border-radius: var(--radius); padding: 48px 36px; text-align: center;">
+                    <div style="font-size: 3.5rem; font-weight: 800; color: var(--gold); letter-spacing: -2px; margin-bottom: 16px; font-family: var(--font-serif);">Month 6</div>
+                    <div style="font-size: 1.15rem; font-weight: 600; color: var(--white); margin-bottom: 12px;">It knows things you forgot you told it</div>
+                    <div style="font-size: 1.05rem; color: var(--muted); line-height: 1.7;">Patterns across six months of meetings, decisions, and competitive moves. Connections no human could track. A system that's become genuinely difficult to replace — because it's become genuinely yours.</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 60px;">
+                <p class="reveal" style="font-size: 1.3rem; color: var(--muted); font-style: italic; font-family: var(--font-serif);">Every correction you make teaches it. Every decision you log trains it. Every week it runs, the switching cost goes up — not because we lock you in, but because the system becomes irreplaceably yours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section class="security" id="security">
+        <div class="container">
+            <div class="section-label reveal">Privacy &amp; Security</div>
+            <h2 class="section-headline reveal">Your data. Your office.<br><em>Your control.</em></h2>
+            <div class="security-grid">
+                <div class="security-card reveal reveal-delay-1">
+                    <div class="security-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" /></svg>
+                    </div>
+                    <h3>Runs on hardware you physically own</h3>
+                </div>
+                <div class="security-card reveal reveal-delay-2">
+                    <div class="security-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                    </div>
+                    <h3>No data leaves your network without permission</h3>
+                </div>
+                <div class="security-card reveal reveal-delay-3">
+                    <div class="security-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" /></svg>
+                    </div>
+                    <h3>No cloud dependency -- works even offline</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GUARANTEE -->
+    <section class="guarantee" id="guarantee">
+        <div class="container">
+            <div class="reveal">
+                <div class="guarantee-badge">30-Day Guarantee</div>
+            </div>
+            <h2 class="reveal">If you're not saving 5 hours a week in your first 30 days, we'll refund everything. No questions asked.</h2>
+            <p class="fine reveal">We can make this promise because it works.</p>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="section-label reveal">From Our Members</div>
+            <blockquote class="reveal">
+                "The morning briefing alone changed how I start my day. I used to spend the first hour of every morning just figuring out what mattered. Now I know before I pour my coffee."
+            </blockquote>
+            <div class="attribution reveal">Founding Member -- Executive Consultant</div>
+            <div class="attribution-sub reveal">Managing 7 clients across 3 industries</div>
+        </div>
+    </section>
+
+    <!-- WHO WE ARE -->
+    <section class="who-we-are" id="about">
+        <div class="container">
+            <div class="who-inner">
+                <div class="section-label reveal">Who We Are</div>
+                <h2 class="reveal">Built by operators<br>who use it <em>every day.</em></h2>
+                <p class="reveal">CONSILIUM was built by executives who got tired of drowning in the operational noise of running companies. Our founding team includes Google Developer Experts, Amazon Web Services AI/ML, and former members of a government efficiency initiative (DOGE). International operators who've built systems across three continents, and product leaders who manage platforms serving tens of millions of users.</p>
+                <p class="reveal">We're not a venture-backed startup racing to ship features. We're operators who built the system we wished existed and now we run our own companies with it every single day. If it stops working for us, it stops existing. That's the alignment you want from the people building your executive operating system.</p>
+                <a href="mailto:join@theconsilium.ai" class="who-link reveal">Get in touch &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-label reveal">Questions</div>
+            <h2 class="section-headline reveal">What you'll <em>want to know.</em></h2>
+            <div class="faq-list">
+                <div class="faq-item reveal">
+                    <button class="faq-question">What if I'm not technical?</button>
+                    <div class="faq-answer">
+                        <p>That's the whole point. You never touch code, write prompts, or configure anything. We handle all of that. You just read your morning briefing and use the dashboard.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal">
+                    <button class="faq-question">What happens if the hardware breaks?</button>
+                    <div class="faq-answer">
+                        <p>Every system ships with AppleCare+. If something fails, we ship a replacement and restore your configuration within 24 hours.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal">
+                    <button class="faq-question">How is this different from ChatGPT or other AI tools?</button>
+                    <div class="faq-answer">
+                        <p>ChatGPT is a blank box. You type a question, you get an answer, and it forgets everything. CONSILIUM knows your business, your team, your competitors, and your goals. It works autonomously while you sleep and improves over time. It's not a chatbot -- it's an operating system.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal">
+                    <button class="faq-question">What if I already have an executive assistant?</button>
+                    <div class="faq-answer">
+                        <p>Great. This doesn't replace your EA -- it makes them 3x more effective. Your EA handles relationships, scheduling, and judgment calls. CONSILIUM handles research, monitoring, drafting, and analysis. Together, they're unstoppable.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal">
+                    <button class="faq-question">Can I cancel anytime?</button>
+                    <div class="faq-answer">
+                        <p>Yes. Our 30-day guarantee protects the first month — if you're not saving at least 5 hours a week, we'll refund everything including the hardware setup fee. After that, cancel with 30 days notice.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal">
+                    <button class="faq-question">What happens to my data if I cancel?</button>
+                    <div class="faq-answer">
+                        <p>You keep the Mac Mini — it's yours. If you cancel before 24 months, the system's memory and intelligence are wiped 15 days after your last payment. That includes your agent configurations, learned patterns, accumulated research, and optimization history. We do this because part of your monthly fee covers the ongoing AI costs, agent maintenance, and system improvements that keep everything running.</p>
+                        <p>If you maintain your membership for 24 months, you earn full ownership. After month 25, you can cancel and everything stays intact — your data, your agents, your system's accumulated intelligence. It just stops receiving updates, new agents, and performance improvements from Marius Ventures. Think of it like owning a car outright after the lease ends. It still drives. It just doesn't get free maintenance anymore.</p>
+                    </div>
+                </div>
+                <div class="faq-item reveal">
+                    <button class="faq-question">What does my monthly fee actually pay for?</button>
+                    <div class="faq-answer">
+                        <p>Three things. First, AI operating costs — your system makes hundreds of API calls per day to process research, generate content, analyze competitors, and produce your morning briefing. Those calls have a real cost that we cover. Second, ongoing maintenance — we push agent updates, performance improvements, new capabilities, and security patches to your system regularly. Third, system optimization — our prompt optimizer runs weekly scoring cycles on your agents, and our team reviews the results to ensure quality keeps improving. You're not paying for a static product. You're paying for a system that gets better every month.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta" id="apply">
+        <div class="container">
+            <h2 class="reveal">Ready to operate<br><em>differently?</em></h2>
+            <a href="https://calendly.com/mariusventures/15min" class="btn-gold-pill reveal" target="_blank" rel="noopener">
+                Schedule a Conversation
+            </a>
+            <p class="cta-contact reveal">Or email us directly at <a href="mailto:join@theconsilium.ai">join@theconsilium.ai</a></p>
+            <p class="cta-trust reveal">No pitch deck. No demo bait. Just a conversation about whether this is right for you.</p>
+            <p class="cta-price reveal">Starting at $499/mo</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-cta">
+                    <h3>The future of<br>executive <em>leverage.</em></h3>
+                    <a href="https://calendly.com/mariusventures/15min" class="btn-primary" target="_blank" rel="noopener" style="margin-top: 8px;">
+                        Apply Now
+                    </a>
+                </div>
+                <div class="footer-info">
+                    <div class="footer-info-group">
+                        <h4>Navigate</h4>
+                        <a href="#about">About</a>
+                        <a href="#capabilities">Benefits</a>
+                        <a href="#faq">FAQ</a>
+                        <a href="/login">Login</a>
+                    </div>
+                    <div class="footer-info-group">
+                        <h4>Connect</h4>
+                        <a href="mailto:join@theconsilium.ai">Contact</a>
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-giant">CONSILIUM</div>
+        <div class="footer-copy">&copy; 2026 Marius Ventures. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // Pill nav shadow on scroll
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll-reveal with IntersectionObserver
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var item = this.parentElement;
+                var isOpen = item.classList.contains('open');
+
+                document.querySelectorAll('.faq-item').forEach(function(el) {
+                    el.classList.remove('open');
+                });
+
+                if (!isOpen) {
+                    item.classList.add('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
